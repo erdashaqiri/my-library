@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Library</title>
+    <link
+      href="{{ url_for('static', filename='bootstrap.min.css') }}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ url_for('static', filename='styles.css') }}"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-light">
+    <div class="container mt-5">
+      <h1 class="text-center mb-4">📚 My Library</h1>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <form
+            action="{{ url_for('add_book') }}"
+            method="POST"
+            class="row g-3"
+          >
+            <div class="col-md-4">
+              <input
+                type="text"
+                name="title"
+                class="form-control"
+                placeholder="Title"
+                required
+              />
+            </div>
+            <div class="col-md-3">
+              <input
+                type="text"
+                name="author"
+                class="form-control"
+                placeholder="Author"
+                required
+              />
+            </div>
+            <div class="col-md-3">
+              <input
+                type="number"
+                name="year"
+                class="form-control"
+                placeholder="Year"
+              />
+            </div>
+            <div class="col-md-2">
+              <button type="submit" class="btn btn-primary w-100">
+                Add Book
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Year</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for book in books %}
+              <!-- Loop through each book in the books list passed from Flask -->
+              <tr>
+                <td>{{ book[1] }}</td>
+                <td>{{ book[2] }}</td>
+                <td>{{ book[3] if book[3] else '' }}</td>
+                <td>
+                  <form
+                    action="{{ url_for('delete_book', book_id=book[0]) }}"
+                    method="POST"
+                    onsubmit="return confirm('Delete this book?');"
+                  >
+                    <button type="submit" class="btn btn-danger btn-sm">
+                      Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+              <!-- End of loop -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
