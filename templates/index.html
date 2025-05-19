@@ -11,6 +11,16 @@
       href="{{ url_for('static', filename='styles.css') }}"
       rel="stylesheet"
     />
+    <script>
+      function editBook(id, title, author, year) {
+        document.getElementById("bookId").value = id;
+        document.querySelector("input[name='title']").value = title;
+        document.querySelector("input[name='author']").value = author;
+        document.querySelector("input[name='year']").value = year;
+        document.querySelector("button[type='submit']").textContent =
+          "Update Book";
+      }
+    </script>
   </head>
   <body class="bg-light">
     <div class="container mt-5">
@@ -23,6 +33,8 @@
             method="POST"
             class="row g-3"
           >
+            <input type="hidden" name="id" id="bookId" />
+
             <div class="col-md-4">
               <input
                 type="text"
@@ -71,15 +83,23 @@
             </thead>
             <tbody>
               {% for book in books %}
-              <!-- Loop through each book in the books list passed from Flask -->
               <tr>
                 <td>{{ book[1] }}</td>
                 <td>{{ book[2] }}</td>
                 <td>{{ book[3] if book[3] else '' }}</td>
                 <td>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-warning me-2"
+                    onclick="editBook('{{ book[0] }}', '{{ book[1]|escape }}', '{{ book[2]|escape }}', '{{ book[3]|default(',')|escape }}')"
+                  >
+                    Edit
+                  </button>
+
                   <form
                     action="{{ url_for('delete_book', book_id=book[0]) }}"
                     method="POST"
+                    style="display: inline"
                     onsubmit="return confirm('Delete this book?');"
                   >
                     <button type="submit" class="btn btn-danger btn-sm">
@@ -89,7 +109,6 @@
                 </td>
               </tr>
               {% endfor %}
-              <!-- End of loop -->
             </tbody>
           </table>
         </div>

@@ -15,6 +15,7 @@ def index():
 
 @app.route("/add", methods=["POST"])
 def add_book():
+    book_id = request.form.get("id") 
     title = request.form.get("title")
     author = request.form.get("author")
     year = request.form.get("year")
@@ -22,13 +23,23 @@ def add_book():
     if title and author:
         conn = sqlite3.connect(DB_FILE)
         c = conn.cursor()
-        c.execute(
-            "INSERT INTO books (title, author, year) VALUES (?, ?, ?)",
-            (title, author, int(year) if year and year.isdigit() else None)
-        )
+
+        if book_id:  # If ID exists, update the book
+            c.execute(
+                "UPDATE books SET title = ?, author = ?, year = ? WHERE id = ?",
+                (title, author, int(year) if year and year.isdigit() else None, book_id)
+            )
+        else:  # Otherwise, insert a new book
+            c.execute(
+                "INSERT INTO books (title, author, year) VALUES (?, ?, ?)",
+                (title, author, int(year) if year and year.isdigit() else None)
+            )
+
         conn.commit()
         conn.close()
+
     return redirect(url_for("index"))
+
 
 @app.route("/delete/<int:book_id>", methods=["POST"])
 def delete_book(book_id):

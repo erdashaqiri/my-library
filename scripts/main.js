@@ -11,6 +11,14 @@ function loadBooks() {
           <td>${book.author}</td>
           <td>${book.year ?? ""}</td>
           <td>
+            <button 
+              type="button" 
+              class="btn btn-warning btn-sm me-2" 
+              onclick="editBook(${book.id}, \`${book.title}\`, \`${
+          book.author
+        }\`, \`${book.year ?? ""}\`)">
+              Edit
+            </button>
             <form action="/delete" method="POST" onsubmit="return confirm('Delete this book?')">
               <input type="hidden" name="id" value="${book.id}">
               <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -35,3 +43,22 @@ function showNotification(message, type = "success") {
 document.querySelector("form")?.addEventListener("submit", () => {
   showNotification("Book added successfully!");
 });
+
+function editBook(id, title, author, year) {
+  const form = document.querySelector("form");
+  if (!form) return;
+
+  let hiddenId = document.getElementById("bookId");
+  if (!hiddenId) {
+    hiddenId = document.createElement("input");
+    hiddenId.type = "hidden";
+    hiddenId.name = "id";
+    hiddenId.id = "bookId";
+    form.appendChild(hiddenId);
+  }
+
+  form.title.value = title;
+  form.author.value = author;
+  form.year.value = year;
+  hiddenId.value = id;
+}
