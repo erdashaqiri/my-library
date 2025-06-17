@@ -27,3 +27,5 @@ The application supports adding new books through a form, displaying all books i
 This project gave me practical experience with full-stack web development and a better understanding of how frontend and backend components interact in a real-world app.
 
 ![My Library Web App](static/images/my-library.png)
+
+## Run this project with 'python library.py'
